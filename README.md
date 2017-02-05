@@ -235,7 +235,7 @@ different steps, I can: (1) create a new workout object, (2) create a new array 
 new workout, (3) update my state with that new array.  The other parts that I added like resetting the miles and
 minutes values just improves usability.
 - Updated next steps (not in any particular order):
-  - __Add minutes, miles, timestamp and id to an array of objects containing all that stuff__
+  - ~~Add minutes, miles, timestamp and id to an array of objects containing all that stuff~~
   - Input validation to prevent users from submitting non-numbers
   - 'Persist' the data into a JSON database => using Axios or fetch
   - Show all of my workouts in a table
@@ -408,6 +408,7 @@ createWorkout(newWorkout)
 ```
   - so, as you can see, the message I am showing the user is the argument that I am passing my showTempMessage()
   method.
+
 - Updated next steps (not in any particular order):
   - ~~Add minutes, miles, timestamp and id to an array of objects containing all that stuff~~
   - ~~Fetch workouts from database.~~

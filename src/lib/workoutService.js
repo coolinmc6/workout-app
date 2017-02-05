@@ -4,3 +4,15 @@ export const loadWorkouts = () => {
 	return fetch(baseURL)
 		.then(response => response.json())
 }
+
+export const createWorkout = (workout) => {
+	return fetch(baseURL, {
+		method: 'POST',
+		headers: {
+			"Accept": 'application/json',
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify(workout)
+	}).then(res => res.json())
+}
+

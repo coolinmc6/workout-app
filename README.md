@@ -319,5 +319,101 @@ gets the results, I think it converts it to JSON.
 - Step #5: I used componentDidMount which is a lifecycle method that runs immediately after a component is
 mounted.  For my app, I am calling my loadWorkouts() method and then setting my this.state.workouts to
 the array that I receive from the database.
+- Updated next steps (not in any particular order):
+  - ~~Add minutes, miles, timestamp and id to an array of objects containing all that stuff~~
+  - ~~Fetch workouts from database.~~
+  - Input validation to prevent users from submitting non-numbers
+  - 'Persist' the data into a JSON database => using Axios or fetch
+  - ~~Show all of my workouts in a table~~
+  - Give users the ability to delete workouts
+  - Show a message to user that they have successfully entered a new workout
 
+## 8. Add Workouts to Database
+- The steps for this part are not too bad but I don't quite understand EVERYTHING yet.  I should probably re-write
+this function using axios but I will use fetch for now.  Here are the basics:
+  - create a `createWorkout()` method in `./src/lib/workoutService.js`.  The method will use fetch but will
+  be a POST request, instead of a GET request. 
+  - import the method into App.js
+  - call `createWorkout()` inside my onSubmit method
+- This is what I did:
+```javascript
+// ./src/lib/workoutService.js
+export const createWorkout = (workout) => {
+	return fetch(baseURL, {
+		method: 'POST',
+		headers: {
+			"Accept": 'application/json',
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify(workout)
+	}).then(res => res.json())
+}
+
+// App.js
+// code
+onFormSubmit(e){
+  e.preventDefault()
+  const nextID = this.state.currentID + 1;
+  const newWorkout = {id: this.state.currentID, minutes: this.state.minutes, miles: this.state.miles}
+  const updatedWorkouts = addWorkout(this.state.workouts, newWorkout);
+  this.setState({
+    minutes: '',
+    miles: '',
+    currentID: nextID,
+    workouts: updatedWorkouts
+  })
+  createWorkout(newWorkout) // NEW
+}
+```
+- I don't understand everything about fetch but here are the basics:
+  - after the baseURL, the next argument is an object with several properties.  One is the `method` I'm using, 
+  POST, a `headers` property that accepts an object, and lastly is the body property which uses the
+  JSON.stringify method on my workout.
+  - Then, like my GET request, `.then(res => res.json())`
+- All the work is done in my createWorkout() method so I just have to call it in onFormSubmit() and pass
+it my newWorkout constant which I created to add it to my state.
+- Updated next steps (not in any particular order):
+  - ~~Add minutes, miles, timestamp and id to an array of objects containing all that stuff~~
+  - ~~Fetch workouts from database.~~
+  - Input validation to prevent users from submitting non-numbers
+  - ~~'Persist' the data into a JSON database => using Axios or fetch~~
+  - ~~Show all of my workouts in a table~~
+  - Give users the ability to delete workouts
+  - Show a message to user that they have successfully entered a new workout
+
+## 9. Show Message After Successful Submission
+- Here are the basics: 
+  - I need the div where the message will show up
+  - write a method that updates state with the message contents and THEN uses a setTimeout to set the message
+  to an empty string
+  - after successfully creating todo, call my method with the associated message
+- I borrowed this code from another project; I don't know exactly how it works but what it's saying is if my
+this.state.message is populated, with anything, my div will be displayed.  Here it is:
+`{ this.state.message && <div className="success">{this.state.message}</div> }`
+- Here is my showTempMessage function.  It takes a message as its argument and updates my message property
+in state.  When my message property is updated, the div is displayed.  The setTimeout is just a function that
+sets my state back to an empty string after 2.5 seconds.
+```javascript
+showTempMessage = (msg) => {
+  this.setState({ message: msg})
+  setTimeout(() => this.setState({message: ''}), 2500)
+}
+```
+- Lastly, I add a `.then()` to my createWorkout() method in my onFormSubmit() method:
+```javascript
+// code
+createWorkout(newWorkout)
+  .then(() => this.showTempMessage('Workout added!  Great Job!'))
+} // end of onFormSubmit() method
+```
+  - so, as you can see, the message I am showing the user is the argument that I am passing my showTempMessage()
+  method.
+- Updated next steps (not in any particular order):
+  - ~~Add minutes, miles, timestamp and id to an array of objects containing all that stuff~~
+  - ~~Fetch workouts from database.~~
+  - Input validation to prevent users from submitting non-numbers or empty fields
+  - ~~'Persist' the data into a JSON database => using Axios or fetch~~
+  - ~~Show all of my workouts in a table~~
+  - Give users the ability to delete workouts
+  - ~~Show a message to user that they have successfully entered a new workout~~
 

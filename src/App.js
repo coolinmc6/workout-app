@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import './App.css';
 import {addWorkout, generateID} from './lib/workoutHelpers';
-import {loadWorkouts} from './lib/workoutService';
+import {loadWorkouts, createWorkout} from './lib/workoutService';
 
 class App extends Component {
   constructor() {
@@ -19,15 +19,9 @@ class App extends Component {
     
   }
 
-  componentDidMount(){
-    
+  componentDidMount(){    
     loadWorkouts()
     .then(workouts => this.setState({workouts : workouts}))
-
-    // const max = this.state.workouts.reduce((prev,curr) => {
-    //   return (prev.id > curr.id) ? prev : curr
-    // })
-    // const maxID = max.id;
   }
 
   onFormSubmit(e){
@@ -41,6 +35,13 @@ class App extends Component {
       currentID: nextID,
       workouts: updatedWorkouts
     })
+    createWorkout(newWorkout)
+      .then(() => this.showTempMessage('Workout added!  Great Job!'))
+  }
+
+  showTempMessage = (msg) => {
+    this.setState({ message: msg})
+    setTimeout(() => this.setState({message: ''}), 2500)
   }
 
   onMinutesChange(e){
@@ -68,6 +69,7 @@ class App extends Component {
           <br />
           <button type="submit">Submit</button>
         </form>
+        { this.state.message && <div className="success">{this.state.message}</div> }
         <table className='table'>
           <tbody>
             <tr><th>ID</th><th>Minutes</th><th>Miles</th></tr>

@@ -415,6 +415,9 @@ createWorkout(newWorkout)
   - Input validation to prevent users from submitting non-numbers or empty fields
   - ~~'Persist' the data into a JSON database => using Axios or fetch~~
   - ~~Show all of my workouts in a table~~
-  - Give users the ability to delete workouts
   - ~~Show a message to user that they have successfully entered a new workout~~
+  - DELETE: Give users the ability to delete workouts
+  - Show a MPH gauge that changes as the user enters numbers
+  - Add basic styling
+  - Create a way to sort my array
 

@@ -159,6 +159,165 @@ when I don't bind my onMinutesChange() function.
 - That's that for now...I think I prefer the 'Miles' way of explicitly defining the context in the constructor and then
 grabbing the value
 
+---
+- Next steps (not in any particular order):
+  - Add minutes, miles, timestamp and id to an array of objects containing all that stuff
+  - Input validation to prevent users from submitting non-numbers
+  - 'Persist' the data into a JSON database => using Axios or fetch
+  - Show all of my workouts in a table
+  - Give users the ability to delete workouts
 
+## 5. Add Workout Details to an Array
+- In looking at some other projects, adding an item isn't too difficult.  One project I completed has a method for 
+adding the todo item to state and another method for adding that item to the database.  This is what I will model
+my add new workout method: `export const addTodo = (list, item) => [...list, item];`. It is a function that takes
+in the current list of items and the new item and returns a new list with that item added, using the spread operator.
+- Here is my resulting code:
+```javascript
+// App.js
+// code
+import {addWorkout} from './lib/workoutHelpers';
+
+// update initial state object
+this.state = {
+  minutes: '',
+  miles: '',
+  currentID: 1, // NEW
+  workouts: []  // NEW
+}
+
+// update onSubmit function
+onFormSubmit(e){
+  e.preventDefault()
+  // ALL THIS BELOW IS NEW
+  const nextID = this.state.currentID + 1;
+  const newWorkout = {id: this.state.currentID, minutes: this.state.minutes, miles: this.state.miles}
+  const updatedWorkouts = addWorkout(this.state.workouts, newWorkout);
+  this.setState({
+    minutes: '',
+    miles: '',
+    currentID: nextID,
+    workouts: updatedWorkouts
+  })
+}
+
+// ./src/lib/workoutHelpers.js
+export const addWorkout = (list, workout) => [...list, workout];
+```
+- The following steps look tricky but they all make sense once I really broke it down:
+  - Step #1: create a file to hold the function that does all of this.  I can do it all in one line and it really 
+  doesn't need to be in the same file as the App.  So, I created `/src/lib/workoutHelpers.js` and each function
+  will start with `export const` so that I can access it.  At the top of my App.js file, I need to import it by 
+  doing this: `import {addWorkout} from './lib/workoutHelpers';`
+  - Step #1 Summary: Add function to Helper, export function (from helper file), import function (in App.js)
+  - Steps Roadmap: For my updated onSubmit function, I need to do the following things: (a) increment
+  my currentID property, (b) set the contents of the newWorkout object, (c) set the contents of the entire updated
+  workouts array, (d) update the state with my new values
+  - Step #2: Each new workout is its own object.  What does that mean for me?  For me to add this workout to
+  my workouts array, I should create it in a constant first and then I can work with it much easier.  So, first thing
+  I do is: `const newWorkout = {id: this.state.currentID, minutes: this.state.minutes, miles: this.state.miles}`.
+  As a quick run-through: my id is just whatever my currentID is, minutes and miles are from my state object which I
+  already have.  At this point, I haven't really done anything...I have simply created an object that contains all
+  the values that I WANT to add to my workouts array.
+  - Step #3: Increment my id; this is pretty self explanatory: `const nextID = this.state.currentID + 1`
+  - Step #4: Create a new array that includes all my workouts PLUS the most recent one that I've created.  THIS is
+  where I can use the new method that I created called 'addWorkout' in my `./lib/workoutHelpers.js`.  My new
+  array, called updatedWorkouts, will simply be assigned to the value of addWorkout(workouts array, new workout).
+  Here it is: `const updatedWorkouts = addWorkout(this.state.workouts, newWorkout);`
+  - Step #5: Again, I still haven't updated my state yet...right now, what I have is an updated list of workouts
+  which NOW includes my newest workout.  In this step, I need to update my state using this.setState.  This part, 
+  after all that I've done thus far, is actually quite easy...I just set my minutes and miles properties back to
+  an empty string, my currentID is now 'nextID' which is simply 1 more, and workouts array is now set to my
+  updatedWorkouts array that I created in Step #4.
+- I know that's a lot of information but it's actually not that bad.  When I add a workout, I have to update my
+state so that it includes all my previous workouts PLUS my newest one.  Breaking that process into a couple 
+different steps, I can: (1) create a new workout object, (2) create a new array that equals the old array + the
+new workout, (3) update my state with that new array.  The other parts that I added like resetting the miles and
+minutes values just improves usability.
+- Updated next steps (not in any particular order):
+  - __Add minutes, miles, timestamp and id to an array of objects containing all that stuff__
+  - Input validation to prevent users from submitting non-numbers
+  - 'Persist' the data into a JSON database => using Axios or fetch
+  - Show all of my workouts in a table
+  - Give users the ability to delete workouts
+  - Show a message to user that they have successfully entered a new workout
+
+## 6. Show All Workouts
+- To show all my workouts, I'll need to iterate over that array...I know I've seen that before.  To do that, we 
+need to use map.
+- My solution is not the prettiest because I haven't broken anything out into separate components yet but
+it does work and here it is:
+```javascript
+// code
+<table className='table'>
+  <tbody>
+    <tr><th>ID</th><th>Minutes</th><th>Miles</th></tr>
+    {this.state.workouts.map(workout => {
+      return (
+        <tr key={workout.id}>
+          <td>{workout.id}</td>
+          <td>{workout.minutes}</td>
+          <td>{workout.miles}</td>
+        </tr>
+      )
+    })}
+  </tbody>
+</table>
+```
+- I didn't have to change anything really, I simply had to display it.  The HTML is pretty straight forward
+so let me discuss the mapping part of it: `{this.state.workouts.map(workout => `. I am passing in my current
+array of workouts `this.state.workouts` to map which calls the function I wrote once for each item in the array.
+My variable, `workout` represents the item in the array.  And for each one, I am returning everything between the
+parentheses.  So for each one, I am giving each row a key of workout.id and then returning my id, minutes and 
+miles in its own column.
+- As I said, I've seen this all done cleaner but this will have to do for now.
+- Updated next steps (not in any particular order):
+  - ~~Add minutes, miles, timestamp and id to an array of objects containing all that stuff~~
+  - Input validation to prevent users from submitting non-numbers
+  - 'Persist' the data into a JSON database => using Axios or fetch
+  - ~~Show all of my workouts in a table~~
+  - Give users the ability to delete workouts
+  - Show a message to user that they have successfully entered a new workout
+
+## 7. Persist Workouts
+- This is what I think I need to do: run json server, create db.json, create a fetching method to get persisted
+workouts
+- Make a `db.json` file in your repo's directory
+- `json-server -p 8080 --watch db.json`
+- create a workoutService.js file
+- write fetch workouts function there
+- Bring in those workouts by calling it in componentDidMount()
+```sh
+touch db.json
+json-server -p 8080 --watch db.json
+```
+```javascript
+// ./src/lib/workoutService.js
+const baseURL = 'http://localhost:8080/workouts';
+
+export const loadWorkouts = () => {
+	return fetch(baseURL)
+		.then(response => response.json())
+}
+
+// App.js
+componentDidMount(){    
+  loadWorkouts()
+  .then(workouts => this.setState({workouts : workouts}))
+}
+```
+- Okay, so it was successful but I had some problems finding the next ID based on the workouts currently in my
+database...but I'll have to address that later.  This is what I did for this step:
+- Step #1: I made my `db.json` file in my project's root directory.  I'm sure I don't NEED to do that but that's
+how I first saw it done...
+- Step #2: run the server: `json-server -p 8080 --watch db.json`
+- Step #3: I created the file here: `./src/lib/workoutService.js`
+- Step #4: I wrote the function using the fetch API but I don't know much about it and MDN lists it as an
+'experimental' technology.  I should learn how to do that using Axios.  This function returns fetch(baseURL)
+which, because it is just a GET request, I don't think it needs any special parameters.  It then, once it
+gets the results, I think it converts it to JSON.
+- Step #5: I used componentDidMount which is a lifecycle method that runs immediately after a component is
+mounted.  For my app, I am calling my loadWorkouts() method and then setting my this.state.workouts to
+the array that I receive from the database.
 
 

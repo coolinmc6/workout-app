@@ -65,7 +65,7 @@ export default App;
 
 - To solve this problem, I need to prevent the default behavior of the submit button which
 is part of the form element.  
-  - Point #1 is that the event handler is on the `&lt;form&gt;` element, not the submit button.
+  - Point #1 is that the event handler is on the `<form>` element, not the submit button.
   - Point #2 is the method itself.  onFormSubmit takes one argument, the event, and then I need
   to just add `.preventDefault()`.
   - Point #3 I need to bind it in the constructor to use it.

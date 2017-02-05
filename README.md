@@ -420,4 +420,5 @@ createWorkout(newWorkout)
   - Show a MPH gauge that changes as the user enters numbers
   - Add basic styling
   - Create a way to sort my array
+  - Break them into different components
 

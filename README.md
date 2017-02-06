@@ -4,6 +4,20 @@
 app will save those stats plus a timestamp and an MPH.  The following is a step-by-step
 discussion in how I built the app along with questions I have and where I struggled.
 
+## 0: Check it out!
+- To see this app do its thing, do the following
+```sh
+git clone https://github.com/coolinmc6/workout-app.git
+cd workout-app
+npm i
+
+# Start the database server
+json-server -p 8080 --watch db.json
+
+# Start the node.js server
+npm start
+```
+
 ## 1: Set-up & Basic Elements
 - After getting rid of the boilerplate code from the `create-react-app` starter, I added
 the basic elements that I will need to just submit a workout.

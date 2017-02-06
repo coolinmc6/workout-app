@@ -30,3 +30,12 @@
 h1 {
   text-align: center;
 }
+
+.delete-workout {
+  color: red;
+  font-weight: 700;
+  visibility: hidden;
+}
+td:hover .delete-workout {
+  visibility: visible;
+}

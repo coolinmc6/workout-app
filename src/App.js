@@ -85,7 +85,7 @@ class App extends Component {
               {this.state.workouts.map(workout => {
                 return (
                   <tr key={workout.id}>
-                    <td><a href="#" key={workout.id} onClick={(e) => this.handleRemove(workout.id, e)}>X</a></td>
+                    <td><a href="#" className="delete-workout" onClick={(e) => this.handleRemove(workout.id, e)}>X</a></td>
                     <td>{workout.id}</td>
                     <td>{workout.minutes}</td>
                     <td>{workout.miles}</td>

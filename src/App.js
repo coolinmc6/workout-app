@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import './App.css';
-import {addWorkout, generateID} from './lib/workoutHelpers';
-import {loadWorkouts, createWorkout} from './lib/workoutService';
+import {addWorkout, generateID, removeWorkout} from './lib/workoutHelpers';
+import {loadWorkouts, createWorkout, destroyWorkout } from './lib/workoutService';
 
 class App extends Component {
   constructor() {
@@ -55,10 +55,18 @@ class App extends Component {
       miles: term
     })
   }
+
+  handleRemove = (id, e) => {
+    e.preventDefault();
+    const updatedWorkouts = removeWorkout(this.state.workouts, id);
+    this.setState({ workouts: updatedWorkouts})
+    destroyWorkout(id)
+      .then(() => this.showTempMessage('Workout Removed'))
+  }
   
   render() {
     return (
-      <div>
+      <div className="container">
         <h1>Run Tracker</h1>
         <form onSubmit={this.onFormSubmit}>
           <label htmlFor="minutes">Minutes:</label>&nbsp;
@@ -67,23 +75,26 @@ class App extends Component {
           <label htmlFor="miles">Miles:</label>&nbsp;
           <input type="text" placeholder="miles" value={this.state.miles} onChange={(e) => this.onMilesChange(e.target.value) }/>
           <br />
-          <button type="submit">Submit</button>
+          <button className="btn btn-primary" type="submit">Submit</button>
         </form>
         { this.state.message && <div className="success">{this.state.message}</div> }
-        <table className='table'>
-          <tbody>
-            <tr><th>ID</th><th>Minutes</th><th>Miles</th></tr>
-            {this.state.workouts.map(workout => {
-              return (
-                <tr key={workout.id}>
-                  <td>{workout.id}</td>
-                  <td>{workout.minutes}</td>
-                  <td>{workout.miles}</td>
-                </tr>
-              )
-            })}
-          </tbody>
-        </table>
+        <div className="col-sm-8">
+          <table className='table'>
+            <tbody>
+              <tr><th>&nbsp;</th><th>ID</th><th>Minutes</th><th>Miles</th></tr>
+              {this.state.workouts.map(workout => {
+                return (
+                  <tr key={workout.id}>
+                    <td><a href="#" key={workout.id} onClick={(e) => this.handleRemove(workout.id, e)}>X</a></td>
+                    <td>{workout.id}</td>
+                    <td>{workout.minutes}</td>
+                    <td>{workout.miles}</td>
+                  </tr>
+                )
+              })}
+            </tbody>
+          </table>
+        </div>
         
       </div>
     );
@@ -92,3 +103,5 @@ class App extends Component {
 
 export default App;
 
+// ES5<td><a href="#" key={workout.id} onClick={this.handleRemove.bind(this, workout.id)}>X</a></td>
+// ES6<td><a href="#" key={workout.id} onClick={(e) => this.handleRemove(workout.id, e)}>X</a></td> 

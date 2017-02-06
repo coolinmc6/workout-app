@@ -16,3 +16,12 @@ export const createWorkout = (workout) => {
 	}).then(res => res.json())
 }
 
+export const destroyWorkout = (id) => {
+	return fetch(`${baseURL}/${id}`, {
+		method: 'DELETE',
+		headers: {
+			"Accept": 'application/json',
+			'Content-Type': 'application/json'
+		},
+	})
+}

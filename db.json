@@ -1,39 +1,19 @@
 {
   "workouts": [
     {
-      "id": 4123552,
-      "minutes": 20,
-      "miles": 2.2
+      "id": 44637931,
+      "minutes": "30",
+      "miles": "2"
     },
     {
-      "id": 96740943,
-      "minutes": 30,
-      "miles": 3.5
-    },
-    {
-      "id": 41928,
+      "id": 44637932,
       "minutes": "25",
       "miles": "3"
     },
     {
-      "id": 40488844,
-      "minutes": "200",
-      "miles": "20"
-    },
-    {
-      "id": 71909714,
-      "minutes": "20",
-      "miles": "2"
-    },
-    {
-      "id": 71909715,
-      "minutes": "15",
-      "miles": "2"
-    },
-    {
-      "id": 71909716,
-      "minutes": "",
-      "miles": ""
+      "id": 53440028,
+      "minutes": "40",
+      "miles": "10"
     }
   ]
 }

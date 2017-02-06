@@ -14,9 +14,11 @@ npm i
 # Start the database server
 json-server -p 8080 --watch db.json
 
-# Start the node.js server
+# Start the node.js server => separate tab
 npm start
 ```
+- if nothing populates initially, the web server may have loaded before the database server in which 
+case you can just refresh your browser and the workouts should populate.
 
 ## 1: Set-up & Basic Elements
 - After getting rid of the boilerplate code from the `create-react-app` starter, I added
@@ -430,9 +432,117 @@ createWorkout(newWorkout)
   - ~~'Persist' the data into a JSON database => using Axios or fetch~~
   - ~~Show all of my workouts in a table~~
   - ~~Show a message to user that they have successfully entered a new workout~~
-  - DELETE: Give users the ability to delete workouts
-  - Show a MPH gauge that changes as the user enters numbers
+  - Delete Functionality: Give users the ability to delete workouts
+  - Show an MPH gauge that changes as the user enters numbers
   - Add basic styling
   - Create a way to sort my array
   - Break them into different components
+
+## 10. Deleting a Workout
+- The way my app is written now, there is no obvious way to delete an item.  There is nowhere to click which means
+that when I spit out my list of workouts, I'll need to also have a link for the user to click.  Also, now that
+I am persisting workouts, I have a couple things to change: the database AND my state.
+- When I create a workout (as described in #5 above), I: #1: create a workout object, #2: create a new array
+that includes my old array PLUS my new workout object, #3: update state with my new array.
+- Applying those steps to deleting, I think I need to: #1 find the workout I want to delete based on ID, #2: 
+delete the item from my database, #3: create a new array that represents my database MINUS that workout, #4:
+update my state to reflect that...let's see if that's what I do.
+
+---
+- Okay so I got it working but it was tricky:  
+```javascript
+handleRemove = (id, e) => {
+  e.preventDefault();
+  const updatedWorkouts = removeWorkout(this.state.workouts, id);
+  this.setState({ workouts: updatedWorkouts})
+  destroyWorkout(id)
+    .then(() => this.showTempMessage('Workout Removed'))
+}
+```
+- Like how I create a new workout, I have to create a new list of workouts by passing my current list of workouts
+and the id that I want to remove to my removeWorkout() method.
+- I then update my state by setting my workouts property to that updated array I received
+- Lastly, I remove the workout from the database via my destroyWorkout() method.
+- I just couldn't understand how to give my handleRemove() function another argument.  Each anchor tag, which 
+I used for the 'delete' button,  needed to be able to send the id of the item that I wanted to delete.  
+In looking at my past examples, I didn't understand what needed to happen but then I saw 
+[this](http://stackoverflow.com/questions/29810914/react-js-onclick-cant-pass-value-to-method).
+I needed to bind it...I still don't understand what this means but in playing around, I was able to come up
+with two bits of code that work (and do the same thing).  This column is now the first one in my table:
+```javascript
+// ES5 => must bind handleRemove and then I can add arguments after 'this'
+<td><a href="#" key={workout.id} onClick={this.handleRemove.bind(this, workout.id)}>X</a></td>
+
+// ES6 => OR, I can do an arrow function.  I still don't quite get this 100% but I've seen this
+// syntax before.
+<td><a href="#" key={workout.id} onClick={(e) => this.handleRemove(workout.id, e)}>X</a></td> 
+```
+- Once I was able to successfully pass in my `workout.id` as well, I had to write two more methods: a
+removeWorkout() method that would live in my workoutHelpers file and a destroyWorkout() method that 
+would live in my workoutService file.
+- My removeWorkout() is below:
+```javascript
+// ./src/lib/workoutHelpers.js
+export const removeWorkout = (list, id) => {
+  const removeIndex = list.findIndex(workout => workout.id === id)
+  return [
+    ...list.slice(0, removeIndex),
+    ...list.slice(removeIndex+1)
+  ]
+}
+```
+  - The removeWorkout() function is like a surgery; I need to identify exactly which one I need to delete
+  by looking for its unique id and then a return an array using the (spread?, rest?, both?) operator(s).  It
+  takes in my entire list of workouts and returns an array that contains everything BUT the one I don't want.
+  As a reminder, we do it this because we do NOT want to mutate the original array so this function has to
+  return an array as such: [all items BEFORE the deleted item, all items AFTER the deleted item]
+  - I'd like to do more work on this but I think I generally understand what's going on here
+- My destroyWorkout() is below:
+```javascript
+// ./src/lib/workoutHelpers.js
+export const destroyWorkout = (id) => {
+  return fetch(`${baseURL}/${id}`, {
+    method: 'DELETE',
+    headers: {
+      "Accept": 'application/json',
+      'Content-Type': 'application/json'
+    },
+  })
+}
+```
+  - This function uses fetch which I need to really dig into.  Anyway, it just needs to id of the workout
+  that I am deleting and then I simply issue a DELETE request with that id in the URL.
+
+- Updated next steps (not in any particular order):
+  - ~~Add minutes, miles, timestamp and id to an array of objects containing all that stuff~~
+  - ~~Fetch workouts from database.~~
+  - Input validation to prevent users from submitting non-numbers or empty fields
+  - ~~'Persist' the data into a JSON database => using Axios or fetch~~
+  - ~~Show all of my workouts in a table~~
+  - ~~Show a message to user that they have successfully entered a new workout~~
+  - ~~Delete Functionality: Give users the ability to delete workouts~~
+  - Show an MPH gauge that changes as the user enters numbers
+  - Add basic styling
+  - Create a way to sort my array
+  - Break them into different components
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

@@ -521,11 +521,107 @@ export const destroyWorkout = (id) => {
   - ~~Show all of my workouts in a table~~
   - ~~Show a message to user that they have successfully entered a new workout~~
   - ~~Delete Functionality: Give users the ability to delete workouts~~
-  - Show an MPH gauge that changes as the user enters numbers
+  - ~~Show an MPH gauge that changes as the user enters numbers~~
   - Add basic styling
   - Create a way to sort my array
   - Break them into different components
 
+## 11. Show MPH gauge
+- I was having trouble keeping this figure in state for some reason.  The calculations, when completed inline, 
+are fine, but when calculated in a method and then called when either the miles or minutes changes, they
+are all screwed up.  I don't understand why but I'll have to come back to it.
+
+## 12. Input Validation: Empty Values
+- Here is a quick list of the what I did:
+  - I created a handleEmptySubmit() method that prevents default action and sets the property of an error
+  message in state
+  - I added a div that populates the error when a user enters an empty submit
+  - I created a 'submitHandler' constant that, when a user submits, determines whether it gets the normal
+  onFormSubmit or handleEmptySubmit methods
+  - When I got those things working, I updated the onFormSubmit button to reset this.state.errorMessage to
+  an empty string so that the message goes away
+```javascript
+handleEmptySubmit(e) {
+  e.preventDefault();
+  this.setState({
+    errorMessage: 'Please supply values for both the minutes and miles for your run.'
+  })
+}
+```
+- Step #1: this isn't a complicated function but it's probably something that I'd need to write in tandem
+with my error message.  I think that a good thing to remember is that I can have a div, which contains
+only the contents of a particular state property, essentially be hidden UNTIL that state property actually
+gets a value.  So in this case, this handleEmptySubmit simply has to prevent the default behavior (because
+the event handler will be doing EITHER onFormSubmit or handleEmptySubmit) and then set the errorMessage 
+property in state to my message.  So, after Step #1, I am simply setting the message, nothing has happened
+yet.
+- Step #2: I get to use that really cool pieces of code that I used before from my 'successful log' message:
+`{ this.state.errorMessage && <span className="error">{this.state.errorMessage}</span> }`.  This pretty much 
+says that if this.state.errorMessage is not empty, display it.  After adding some basic styling, we now have
+a way to show users in bold, red font WHY we can't submit their blank form.
+- Step #3: This is another cool piece of code that I'll need to remember: 
+
+`const submitHandler = (this.state.miles && this.state.minutes) ? this.onFormSubmit : this.handleEmptySubmit;`
+
+This constant, submitHandler, it checks to see that the user has entered SOMETHING into both the minutes
+and miles inputs.  If they are both populated, then the handler that I will use is `this.onFormSubmit`; if
+one or both are empty, we'll use `this.handleEmptySubmit`.  We then insert the constant `submitHandler` into
+the event handler on my form: `<form onSubmit={submitHandler}>`.
+- Step #3.5 ==> at this point, we are ALMOST there, but we have to remember to BIND the function. In another
+example I saw, the programmer didn't have to but I believe he did a reason why, I just don't remember it now.
+Anyway, here's what I added to the constructor: `this.handleEmptySubmit = this.handleEmptySubmit.bind(this);`
+
+- Step #4: We now have a working error message BUT it never goes away...even once the user populates both 
+fields and successfully logs a workout, it's still there. That is a quick fix: just update the onFormSubmit
+function: `errorMessage: ''` => this sets the errorMessage to empty string which makes the message disappear.
+
+- Updated next steps (not in any particular order):
+  - ~~Add minutes, miles, timestamp and id to an array of objects containing all that stuff~~
+  - ~~Fetch workouts from database.~~
+  - ~~Input validation to prevent users from submitting empty fields~~
+  - ~~'Persist' the data into a JSON database => using Axios or fetch~~
+  - ~~Show all of my workouts in a table~~
+  - ~~Show a message to user that they have successfully entered a new workout~~
+  - ~~Delete Functionality: Give users the ability to delete workouts~~
+  - ~~Show an MPH gauge that changes as the user enters numbers~~
+  - ~~Add basic styling~~
+  - Create a way to sort my array
+  - Break them into different components
+
+## 13. Timestamp
+- This was a pain; Javascript doesn't have the best datetime functionality and I didn't feel like
+bringing in a library.  What I learned, though, in trying to add a method to simply format a date, I
+can't quite describe what the concept is called but this is what happens:
+  - I tried defining a method called timeStamp() in my App class where everything is. One problem, however 
+  was that in the onFormSubmit() method where I wanted to add the date, it couldn't find the method.  It
+  kept coming up with timeStamp is undefined.  Doing `App.timeStamp()` didn't solve the problem either.
+  - So...I created a new file /lib/utils.js to hold the method and simply imported it into my App.js file.
+  I could now call it my onFormSubmit method.
+  - Something else that I noticed was the syntax differences.  Here is how I define a method in my App class:
+  ```javascript
+  componentDidMount(){    
+    loadWorkouts()
+    .then(workouts => this.setState({workouts : workouts}))
+  }
+
+  // func name, parens, open curly brace
+  // functionName(){
+  ```
+  - Outside of my App class:
+  ```javascript
+  export const timeStamp = () => {
+
+  // export, const, func name, is (equals, assigned to), parens, fat arrow, open curly
+  // export const funcName = () => {
+  ```
+  - I'd need to dig into WHY the difference between the snytax as well as why I couldn't access my function
+  from inside App.
+  - For now, just assume that any functions that aren't a handler of some kind or lifecycle method MUST be
+  written outside of the App class.  So I bet that I could add the timeStamp method above the App class and 
+  it'd work just fine.
+  - **This may solve the issue I had with MPH in #11; I should take another look.**
+- Anyway, the function that I used for my timestamp is largely from stackexchange; it's boring and more
+manual than I would've hoped but self explanatory.
 
 
 

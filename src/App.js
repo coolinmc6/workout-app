@@ -3,6 +3,7 @@ import './App.css';
 import {addWorkout, generateID, removeWorkout} from './lib/workoutHelpers';
 import {loadWorkouts, createWorkout, destroyWorkout } from './lib/workoutService';
 import {timeStamp} from './lib/utils';
+import WorkoutForm from './components/WorkoutForm';
 
 class App extends Component {
   constructor() {
@@ -90,24 +91,17 @@ class App extends Component {
     const submitHandler = (this.state.miles && this.state.minutes) ? this.onFormSubmit : this.handleEmptySubmit;
     return (
       <div className="container">
-        <h1>Run Tracker</h1>
-        <form onSubmit={submitHandler}>
-          <label htmlFor="minutes">Minutes:</label>&nbsp;
-          <input type="text" placeholder="minutes" value={this.state.minutes} onChange={this.onMinutesChange} />
-          <br />
-          <label htmlFor="miles">Miles:</label>&nbsp;
-          <input type="text" placeholder="miles" value={this.state.miles} onChange={(e) => this.onMilesChange(e.target.value) }/>
-          <br />
-          <label htmlFor="mph">Miles Per Hour:</label>&nbsp;
-          <input type="text" disabled value={(this.state.miles / (this.state.minutes / 60))} />&nbsp;&nbsp;&nbsp;
-          <label htmlFor="minute-mile">Minutes per mile:</label>&nbsp;
-          <input type="text" disabled value={this.state.minutes / this.state.miles} /><br />
-          <button className="btn btn-primary" type="submit">Submit</button>
+        <h1>Workout Tracker</h1>
+        <div className="col-sm-7 logger">
+          <h2>Log a Workout</h2>
+          <WorkoutForm  miles={this.state.miles}
+                        minutes={this.state.minutes}
+                        milesHandler={(e) => this.onMilesChange(e.target.value)}
+                        minutesHandler={this.onMinutesChange}
+                        submitHandler={submitHandler}/>
 
-        </form>
-        { this.state.errorMessage && <span className="error">{this.state.errorMessage}</span> }
-        { this.state.message && <div className="success">{this.state.message}</div> }
-        <div className="col-sm-6">
+          { this.state.errorMessage && <span className="error">{this.state.errorMessage}</span> }
+          { this.state.message && <div className="success">{this.state.message}</div> }
           <table className='table table-hover table-striped'>
             <tbody>
               <tr><th>Delete</th><th>ID</th><th>Minutes</th><th>Miles</th><th>Date/Time</th></tr>
@@ -125,8 +119,20 @@ class App extends Component {
             </tbody>
           </table>
         </div>
+
+        <div className="col-sm-5 status">
+          <h2>Workout Status</h2>
+          <textarea className="status-area">
+            I need a submit button.
+            A "feed".
+            persist to db.json
+            
+          </textarea>
+
+        </div>
         
-      </div>
+      </div> 
+
     );
   }
 }

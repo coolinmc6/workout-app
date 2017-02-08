@@ -36,8 +36,16 @@
 th, td {
   text-align: center;
 }
-h1 {
+h1, h2 {
   text-align: center;
+}
+
+.status {
+  background-color: #ffcc00;
+}
+
+.status-area {
+  width: 100%;
 }
 
 form {

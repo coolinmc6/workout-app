@@ -623,7 +623,123 @@ can't quite describe what the concept is called but this is what happens:
 - Anyway, the function that I used for my timestamp is largely from stackexchange; it's boring and more
 manual than I would've hoped but self explanatory.
 
-## 14. Break Into Components
+## 14. Break Into Components: WorkoutForm
+- My current form element contains all the inputs for entering my minutes and miles figures as well as
+the event handler for onSubmit.  So if I am going to break this out into a separate component, I'll need
+to pass, as props, the following: minutes (state), miles (state), submitHandler (which is either
+onFormSubmit or handleEmptySubmit), onMilesChange and onMinutesChange.  Here's a quick mock-up of my WorkoutForm:
+```javascript
+// WorkoutForm.js
+<div>
+  <form onSubmit={props.submitHandler}>
+    <label htmlFor="minutes">Minutes:</label>&nbsp;
+    <input type="text" placeholder="minutes" value={this.state.minutes} onChange={props.minutesHandler} />
+    <br />
+    <label htmlFor="miles">Miles:</label>&nbsp;
+    <input type="text" placeholder="miles" value={props.miles} onChange={(e) => this.onMilesChange(e.target.value) }/>
+    <br />
+    <label htmlFor="mph">Miles Per Hour:</label>&nbsp;
+    <input type="text" disabled value={(props.miles / (props.minutes / 60))} />&nbsp;&nbsp;&nbsp;
+    <label htmlFor="minute-mile">Minutes per mile:</label>&nbsp;
+    <input type="text" disabled value={props.minutes / props.miles} /><br />
+    <button className="btn btn-primary" type="submit">Submit</button>
+  </form>
+</div>
+
+// App.js
+<WorkoutForm  submitHandler={submitHandler}
+              milesHandler={(e) => this.onMilesChange(e.target.value)}
+              minutesHandler={this.onMinutesChange}
+              miles={this.state.miles}
+              minutes={this.state.minutes} 
+              />  
+```
+
+- Removed from App.js:
+```javascript
+<form onSubmit={submitHandler}>
+  <label htmlFor="minutes">Minutes:</label>&nbsp;
+  <input type="text" placeholder="minutes" value={this.state.minutes} onChange={this.onMinutesChange} />
+  <br />
+  <label htmlFor="miles">Miles:</label>&nbsp;
+  <input type="text" placeholder="miles" value={this.state.miles} onChange={(e) => this.onMilesChange(e.target.value) }/>
+  <br />
+  <label htmlFor="mph">Miles Per Hour:</label>&nbsp;
+  <input type="text" disabled value={(this.state.miles / (this.state.minutes / 60))} />&nbsp;&nbsp;&nbsp;
+  <label htmlFor="minute-mile">Minutes per mile:</label>&nbsp;
+  <input type="text" disabled value={this.state.minutes / this.state.miles} /><br />
+  <button className="btn btn-primary" type="submit">Submit</button>
+</form>
+```
+This is the new WorkoutForm component:
+```javascript
+import React from 'react';
+
+export const WorkoutForm = (props) => {
+
+  return (
+    <div>
+      <form onSubmit={props.submitHandler}>
+        <label htmlFor="minutes">Minutes:</label>&nbsp;
+        <input type="text" placeholder="minutes" value={props.minutes} onChange={props.minutesHandler} />
+        <br />
+        <label htmlFor="miles">Miles:</label>&nbsp;
+        <input type="text" placeholder="miles" value={props.miles} onChange={props.milesHandler}/>
+        <br />
+        <label htmlFor="mph">Miles Per Hour:</label>&nbsp;
+        <input type="text" disabled value={(props.miles / (props.minutes / 60))} />&nbsp;&nbsp;&nbsp;
+        <label htmlFor="minute-mile">Minutes per mile:</label>&nbsp;
+        <input type="text" disabled value={props.minutes / props.miles} /><br />
+        <button className="btn btn-primary" type="submit">Submit</button>
+      </form>
+    </div>
+  );
+}
+
+export default WorkoutForm;
+```
+- I struggled with a using `this.props.xxx` vs. `props.xxx`.  I have seen other components have a constructor
+and have to use `this.props.xxx`.  In the component that I built, it's just a function that takes props as its
+only argument which I can then insert use where I want.  I call each property by just doing `props.miles`, etc.
+- Building this form in my App first and then bringing it over helped me better understand the parent-child
+relationships of props and state.  It is in the child component that the 'onSubmit', or 'onChange' handlers
+are because that is WHERE they are being initiated.  The child can be 'dumb' in that it doesn't have to know
+what to do or what function to call, it just has to know the props name. 
+  - On the parent side, where all of my methods are, what it needs to pass down in the form of a prop is 
+  whatever would normally go inside the curly braces.  So my miles prop that I am passing down, I want it to
+  come from state, thus `miles={this.state.miles}`.  To change the mile property, I also need to pass its
+  associated onMilesChange handler.  The onChange handler was originally in the parent, App, but it's now in 
+  the child component, WorkoutForm, which means that the onChange is NO LONGER in my App component.  This means
+  that instead of `onChange={(e) => this.onMilesChange(e.target.value)}`, I need to pass that value between the
+  curly braces into a prop that I called 'milesHandler'.  Here is what my App.js component looks like:
+```javascript
+<WorkoutForm  miles={this.state.miles}
+              minutes={this.state.minutes}
+              milesHandler={(e) => this.onMilesChange(e.target.value)}
+              minutesHandler={this.onMinutesChange}
+              submitHandler={submitHandler}/>
+```
+  - A simple way to think about it is that the parent has the "good stuff" between the curly braces.  It's passing
+  state or a method or whatever is really needed to make the app run.  It cannot, however, directly implement it; 
+  it has to pass it into a property that its child can call.  The child component has all the good stuff in the
+  props, it just needs to actually implement it.  That means it must actually implement the onChange, even if
+  it doesn't know what's in it, it just has to pick the right one.  It has to put the prop associated with miles
+  into the appropriate input element associated with miles.
+  - Parent => puts the important stuff in little boxes labeled to reflect what each is supposed to do (e.g. miles, 
+  minutes, submitHandler, etc.).
+  - Child => takes each little box and follows the labels to put them into the appropriate elements or handlers.
+  The milesHandler is supposed to go om the onChange handler for the miles input.  The submitHandler is supposed
+  to go on the onSubmit handler of the form element.
+  - Child => the child component can access each little box by referencing 'props', '.', and then the name of the
+  prop it is grabbing. `onSubmit={props.submitHandler}`, `value={props.minutes}`, etc.
+- Building a component that has to access `this.props.propName` would be a good exercise.  I need to understand
+the difference.
+
+- Updated next steps (not in any particular order):
+  - Create a way to sort my array
+  - Break them into different components: Table, Status logger
+  - Moderately better styling
+  - Review
 
 
 

@@ -772,6 +772,7 @@ referring to my workouts functions / patterns too much.
   - The initial adding of a status to a 'feed'
   - Persisting my status
   - The key issue is still a problem => in my React devtools, each div has a unique id so I'm not sure what's going on
+  - I am also struggling with getting glyphicons into my app...I have no idea why they aren't working.
   
 
 

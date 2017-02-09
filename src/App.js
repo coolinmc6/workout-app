@@ -4,6 +4,7 @@ import {addWorkout, generateID, removeWorkout} from './lib/workoutHelpers';
 import {loadWorkouts, createWorkout, destroyWorkout } from './lib/workoutService';
 import {timeStamp} from './lib/utils';
 import WorkoutForm from './components/WorkoutForm';
+import StatusForm from './components/StatusForm';
 
 class App extends Component {
   constructor() {
@@ -122,12 +123,9 @@ class App extends Component {
 
         <div className="col-sm-5 status">
           <h2>Workout Status</h2>
-          <textarea className="status-area">
-            I need a submit button.
-            A "feed".
-            persist to db.json
-            
-          </textarea>
+          <StatusForm />
+
+
 
         </div>
         

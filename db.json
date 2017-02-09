@@ -36,5 +36,35 @@
       "miles": "8.5",
       "timestamp": "8 February 2017 9:58am"
     }
+  ],
+  "statuses": [
+    {
+      "status": "Test status",
+      "id": 1
+    },
+    {
+      "status": "More status tests",
+      "id": 2
+    },
+    {
+      "status": "more tests",
+      "id": 59618394
+    },
+    {
+      "status": "Look at all this stuff, what an amazing status",
+      "id": 46028106
+    },
+    {
+      "status": "Great run today",
+      "id": 49187910
+    },
+    {
+      "status": "Shitty run today",
+      "id": 10265122
+    },
+    {
+      "status": "Look at all this stuff, what an amazing status; Look at all this stuff, what an amazing status; Look at all this stuff, what an amazing status; Look at all this stuff, what an amazing status",
+      "id": 60998642
+    }
   ]
 }

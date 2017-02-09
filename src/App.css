@@ -41,7 +41,7 @@ h1, h2 {
 }
 
 .status {
-  background-color: #ffcc00;
+  background-color: #FFFFEA;
 }
 
 .status-area {
@@ -70,4 +70,15 @@ td a, td a:hover, td a:active {
   text-decoration: none;
   color: red;
   font-size: 1.2rem;
+}
+
+.status-box {
+  width: 90%;
+  margin: 0 auto;
+  -webkit-border-radius: 4px;
+          border-radius: 4px;
+  padding: 0.5rem;
+  background-color: #FFFCFE;
+  margin-bottom: 1rem;
+  border: 1px solid #33aafe;
 }

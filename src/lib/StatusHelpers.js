@@ -1,0 +1,1 @@
+export const addStatus = (feed, status) => [...feed, status];

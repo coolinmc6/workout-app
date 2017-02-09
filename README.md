@@ -741,6 +741,31 @@ the difference.
   - Moderately better styling
   - Review
 
+## 15. Status Logger
+- For my status logger, I need:
+  - I need a submit button.
+  - A "feed".
+  - persist to db.json
+- Steps as I do them:
+  - ~~Create StatusForm component~~
+  - ~~Build textarea~~
+  - ~~Add button for Submit Status~~
+  - ~~~default out the behavior~~~
+  - ~~Update state on change of textarea AND make it controlled~~
+  - ~~Add status to state.feed~~
+  - ~~Simple render of status to my page so that I can see my statuses~~
+  - ~~Add status to database onSubmit~~
+  - Delete status
+- Current status: I've been able to add a status to my database BUT I keep getting errors about children in a list
+not having a key.  I'm trying to understand why the code below doesn't work:
+```javascript
+{ this.state.feed.map((status) => {
+  return (
+    <div className='status-box' key={status.id} >{status.status}</div>
+  );
+})}
+```
+
 
 
 

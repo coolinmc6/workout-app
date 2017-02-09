@@ -765,7 +765,14 @@ not having a key.  I'm trying to understand why the code below doesn't work:
   );
 })}
 ```
-
+- NEXT STEPS: describe where you are at right now and what you struggled with.  I tried to do most of this without
+referring to my workouts functions / patterns too much. 
+- Discussion points:
+  - Creating state in my StatusForm and NOT my App component
+  - The initial adding of a status to a 'feed'
+  - Persisting my status
+  - The key issue is still a problem => in my React devtools, each div has a unique id so I'm not sure what's going on
+  
 
 
 

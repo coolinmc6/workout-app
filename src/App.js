@@ -123,6 +123,7 @@ class App extends Component {
 
         <div className="col-sm-5 status">
           <h2>Workout Status</h2>
+          
           <StatusForm />
 
 

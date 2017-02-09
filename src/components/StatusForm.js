@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import {addStatus} from '../lib/StatusHelpers';
 import {loadFeed, createStatus} from '../lib/StatusService';
 import {generateID} from '../lib/workoutHelpers';
+import {timeStamp} from '../lib/utils';
+
 
 class StatusForm extends Component {
 	constructor() {
@@ -27,11 +29,13 @@ class StatusForm extends Component {
 
 	onFormSubmit(e) {
 		e.preventDefault();
-		const newStatus = {status: this.state.status, id: generateID()};
+		const timestamp = timeStamp();
+		const newStatus = {status: this.state.status, id: generateID(), date: timestamp};
 		const updatedStatus = addStatus(this.state.feed,newStatus);
+		
 		this.setState({
 			status: '',
-			feed: updatedStatus
+			feed: updatedStatus,
 		})
 		createStatus(newStatus);
 	}
@@ -39,9 +43,12 @@ class StatusForm extends Component {
 	render() {
 		return (
 			<div>
-				<form onSubmit={this.onFormSubmit}>
-				  <textarea className="status-area" onChange={this.onStatusChange} value={this.state.status}></textarea>
-				  <button type="Submit" className="btn btn-info">Update Status</button>
+				<form onSubmit={this.onFormSubmit} className="status-form">
+				  	<textarea className="status-area" onChange={this.onStatusChange} value={this.state.status}></textarea>
+				  	<div className='btn-holder'>
+				  		<span className="glyphicon glyphicon-search"></span>
+				  		<button type="submit" className="btn btn-info update-status">Update Status</button>
+			  		</div>
 				</form>
 				
 				{ this.state.feed.map((status) => {

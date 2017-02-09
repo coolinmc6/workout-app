@@ -8,10 +8,7 @@ class StatusForm extends Component {
 		super();
 		this.state = {
 			status: '',
-			feed: [
-				'This is an amazing default status',
-				'How could this status be any cooler?'
-			]
+			feed: []
 		}
 
 		this.onFormSubmit = this.onFormSubmit.bind(this);

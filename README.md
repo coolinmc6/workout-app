@@ -774,6 +774,66 @@ referring to my workouts functions / patterns too much.
   - The key issue is still a problem => in my React devtools, each div has a unique id so I'm not sure what's going on
   - I am also struggling with getting glyphicons into my app...I have no idea why they aren't working.
   
+### Building the Status Logger
+- The Status Logger has a number of elements: textarea (to enter status), submit button (to save it), display area (to 
+show past status updates).
+- I was struggling to reconcile the two methods of building components; I couldn't understand why a child component
+of App, for example, would ever have state...why wouldn't you just want App to hold it and all state simply be passed
+down to the child component?  It was feeling like every component that I wrote would be a functional component except
+for the one component, App, that I'd want to have state.  My question:
+  - **Is there ever a time where I want my child component to have state (and thus be a class-based component) BUT**
+  **its state does not need to be saved / recorded to the global state?**
+- Anyway, I decided to make a class-based component with its own state which may create problems for me down the line
+but for now, my `StatusForm />` state is completely separate from my `<App />` state.
+- In building the component, it has the normal things I need:
+  - constructor() method to call super(), initialize state, bind functions
+  - componentDidMount() lifecycle method that loads my statuses
+  - onStatusChange that records the value of my textarea onChange
+  - onFormSubmit to submit my status
+- None of the HTML, event handlers or the mapping of my statuses is too dissimilar so I want to focus on the other
+items I had to build.
+- To get this thing working, I had to create `StatusHelpers.js` and `StatusService.js` files, just like for my
+workout logging.
+- Let's look at the first part that I had to solve was adding a new status to my 'feed' array which is just a 
+list of all my statuses.  To add something to my feed:
+  - I need to create a `const newStatus` object that contains the fields that I want to save.  Initially, it was
+  just the status (I added id and timestamp later), and it was an object that contained just one property, 'status', 
+  and its contents were that of 'this.state.status' (the contents of the textarea element).  It looked something
+  like this: `const newStatus = { status: this.state.status }
+  - Next, I needed to get an updated array which contained my old array PLUS my new status.  The basics of what
+  I'm trying to accomplish is this: `newFeed = oldFeed + newStatus`.  But how do I add to my old feed without
+  mutating it?  I actually already did it for my workouts but I did it again for practice...I wrote a function in
+  my StatusHelpers as follows: `export const addStatus = (feed, status) => [...feed, status]`.  It's always the
+  same pattern and I should probably just log this somewhere...the function takes in the old array and the new
+  item to add and returns it using the spread operator with the new item on the end.
+  - After writing my addStatus function, I was able to create an updatedStatus variable as follows:
+  `const updatedStatus = addStatus(this.state.feed,newStatus)`.  Now, I have exactly what I want which is my new
+  feed that I can use to update my state.
+  - Updating state is easy...I just need to put in my updated feed into the feed property and clear out state
+  because we have it now and it allows users to start entering in a new status
+  - NOTE: I feel like the normal flow of a production app would be to: (#1) add it to the database, (#2) 
+  re-load the 20-50 most recent statuses, (#3) update my state to include those 20-50 statuses.  Maybe I'm wrong
+  but my current state would be depenedent on just this user / session...if they were logged in somewhere else and
+  added a status, they wouldn't have the most up-to-date feed, it would just be the 20 statuses they loaded 
+  initially plus whatever statused they added.  I'll have to address this later.
+  - Now that I've updated my state, I'll need to add it to my database.  This was pretty easy because I generally
+  used the same pattern from my workoutService file.  I won't lay out the fetch API because I haven't really dug 
+  into it yet but it is pretty much the exact same code for adding a workout except for the baseURL.
+  - My next method will have to be Axios.
+
+## 16. Importing Icons
+- I still don't understand how to bring in glyphicons from bootstrap.  I ended up using React Icons, see 
+[here](https://gorangajic.github.io/react-icons/fa.html) for more, but it has Font Awesome icons.  For now, 
+these are the main steps (starting from the very beginning):
+  - Install React Icons: `npm install react-icons --save`
+  - Import the icon you want into the file you're using it: `const FaHeart = require('react-icons/lib/fa/heart')`.
+  For some reason, the import didn't work for me.
+  - Place it in the component like so: `<FaHeart />`
+  - There is a huge list of icons at its [github page](https://gorangajic.github.io/react-icons/fa.html) so go there
+  for a particular item.
+- One cool thing to note that is probably not that mind-bending is that I can add `className="red"` and then
+now that icon has the red class which I made `color: red;`.  Again, nothing special, but I wasn't 100% sure
+on what I could do, especially with component that I didn't write.
 
 
 

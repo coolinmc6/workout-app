@@ -4,6 +4,8 @@ import {loadFeed, createStatus} from '../lib/StatusService';
 import {generateID} from '../lib/workoutHelpers';
 import {timeStamp} from '../lib/utils';
 
+const FaHeart = require('react-icons/lib/fa/heart');
+
 
 class StatusForm extends Component {
 	constructor() {
@@ -43,19 +45,22 @@ class StatusForm extends Component {
 	render() {
 		return (
 			<div>
+				
 				<form onSubmit={this.onFormSubmit} className="status-form">
 				  	<textarea className="status-area" onChange={this.onStatusChange} value={this.state.status}></textarea>
 				  	<div className='btn-holder'>
-				  		<span className="glyphicon glyphicon-search"></span>
+				  		
 				  		<button type="submit" className="btn btn-info update-status">Update Status</button>
 			  		</div>
 				</form>
 				
+				
 				{ this.state.feed.map((status) => {
 					return (
-						<div className='status-box' key={status.id} >{status.status}</div>
+						<div><div className='status-box' key={status.id} >{status.status}</div><FaHeart className='red' />&nbsp;</div>
 					);
 				})}
+				
 				
 			</div>
 		);

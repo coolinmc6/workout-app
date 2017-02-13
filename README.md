@@ -836,8 +836,57 @@ now that icon has the red class which I made `color: red;`.  Again, nothing spec
 on what I could do, especially with component that I didn't write.
 
 
+## 17. Deleting Workouts with Axios
+- Installing Axios:
+```sh
+npm install axios
+```
+- To delete a status, this is what I'll need to do:
+  - delete it from my status array
+    - write a removeStatus helper
+    - set an updatedStatus array equal to the old array MINUS the one I'm deleting
+    - update my state with the updatedStatus array
+  - delete it from the database
+    - write a deleteStatus function to identify status by ID and then delete it
 
-
+1. Delete from Status Array
+```javascript
+export const deleteStatus = (list, id) => {
+  const deleteIndex = list.findIndex(status => status.id === id)
+  return [
+    ...list.slice(0,deleteIndex),
+    ...list.slice(deleteIndex+1)
+  ]
+}
+```
+2. Create updatedStatuses array and Update State
+```javascript
+const updatedStatuses = removeStatus(this.state.feed,id)
+this.setState({
+  feed: updatedStatuses
+});
+```
+- Writing a delete HTTP request, the only thing I really need to do is give my id.  I obviously need the 'database' that
+I'm accessing, or `statuses`, but that's it.  It's just a delete request and the id to delete.
+3. Delete from server
+```javascript
+deleteStatus(id)
+  .then(() => this.showTempMessage('Status successfully deleted.'))
+```
+- The code above was my original version...just like in my workouts, I delete the appropriate status and then
+show my temporary message.  I updated it to use some promises so that instead of doing step #2 above, I cut that
+part out entirely and delete the status right from the database and THEN load all my statuses. It looks like this:
+```javascript
+deleteStatus(id)
+  .then(() => this.showTempMessage('Status successfully deleted.'))
+  .then(() => loadFeed())
+  .then(feed => this.setState({ feed }))
+```
+- So I: 
+  - #1: delete my status given its id number
+  - #2: THEN show a temporary message
+  - #3: THEN load my feed (GET request for all statuses)
+  - #4: THEN set my state.feed property to feed
 
 
 

@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
-import {addStatus} from '../lib/StatusHelpers';
-import {loadFeed, createStatus} from '../lib/StatusService';
+import {addStatus, removeStatus} from '../lib/StatusHelpers';
+import {loadFeed, createStatus, deleteStatus} from '../lib/StatusService';
 import {generateID} from '../lib/workoutHelpers';
 import {timeStamp} from '../lib/utils';
 
 const FaHeart = require('react-icons/lib/fa/heart');
+const FaTrash = require('react-icons/lib/fa/trash');
 
 
 class StatusForm extends Component {
@@ -17,6 +18,7 @@ class StatusForm extends Component {
 
 		this.onFormSubmit = this.onFormSubmit.bind(this);
 		this.onStatusChange = this.onStatusChange.bind(this);
+		this.handleRemove = this.handleRemove.bind(this);
 	}
 
 	componentDidMount() {
@@ -42,6 +44,26 @@ class StatusForm extends Component {
 		createStatus(newStatus);
 	}
 
+	showTempMessage = (msg) => {
+	  this.setState({ message: msg})
+	  setTimeout(() => this.setState({message: ''}), 2500)
+	}
+
+	handleRemove(e,id) {
+		e.preventDefault();
+		console.log(id)
+		// const updatedStatuses = removeStatus(this.state.feed,id)
+		// this.setState({
+		// 	feed: updatedStatuses
+		// });
+		deleteStatus(id)
+			.then(() => this.showTempMessage('Status successfully deleted.'))
+			.then(() => loadFeed())
+			.then(feed => this.setState({ feed }))
+	}
+
+	
+
 	render() {
 		return (
 			<div>
@@ -53,11 +75,16 @@ class StatusForm extends Component {
 				  		<button type="submit" className="btn btn-info update-status">Update Status</button>
 			  		</div>
 				</form>
+
+				{ this.state.message && <div className="success">{this.state.message}</div> }
 				
 				
 				{ this.state.feed.map((status) => {
 					return (
-						<div><div className='status-box' key={status.id} >{status.status}</div><FaHeart className='red' />&nbsp;</div>
+						<div className="status-box-container" key={status.id}>
+							<div className='status-box' key={status.id} >{status.status}</div>
+							<a href="#" onClick={(e) => this.handleRemove(e,status.id)}><FaTrash /></a>
+						</div>
 					);
 				})}
 				

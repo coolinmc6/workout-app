@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
-import {addStatus, removeStatus} from '../lib/StatusHelpers';
+import {addStatus} from '../lib/StatusHelpers';
 import {loadFeed, createStatus, deleteStatus} from '../lib/StatusService';
 import {generateID} from '../lib/workoutHelpers';
 import {timeStamp} from '../lib/utils';
 
-const FaHeart = require('react-icons/lib/fa/heart');
+// const FaHeart = require('react-icons/lib/fa/heart');
 const FaTrash = require('react-icons/lib/fa/trash');
 
 
@@ -83,7 +83,8 @@ class StatusForm extends Component {
 					return (
 						<div className="status-box-container" key={status.id}>
 							<div className='status-box' key={status.id} >{status.status}</div>
-							<a href="#" onClick={(e) => this.handleRemove(e,status.id)}><FaTrash /></a>
+							<span className="date">{status.date}</span>&nbsp;&nbsp;&nbsp;
+							<a href="#" className="trash" onClick={(e) => this.handleRemove(e,status.id)}><FaTrash /></a>
 						</div>
 					);
 				})}

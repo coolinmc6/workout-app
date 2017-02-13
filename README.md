@@ -882,12 +882,17 @@ deleteStatus(id)
   .then(() => loadFeed())
   .then(feed => this.setState({ feed }))
 ```
-- So I: 
+- So I am doing the following: 
   - #1: delete my status given its id number
   - #2: THEN show a temporary message
   - #3: THEN load my feed (GET request for all statuses)
   - #4: THEN set my state.feed property to feed
 
+Next Steps:
+1. Lessons learned
+2. Aggregate questions from each of the various sections
+3. Write Executive Summary
+4. Create TOC with links to each section
 
 
 

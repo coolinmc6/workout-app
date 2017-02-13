@@ -36,11 +36,10 @@
 th, td {
   text-align: center;
 }
+
 h1, h2 {
   text-align: center;
 }
-
-
 
 form {
   margin-bottom: 10px;
@@ -72,6 +71,7 @@ td a, td a:hover, td a:active {
 
 .status {
   background-color: #FFFFEA;
+  padding-bottom: 2rem;
 }
 
 .status-form {
@@ -97,6 +97,7 @@ td a, td a:hover, td a:active {
   border-bottom: 1px solid #33aafe;
   /*border-top: 1px solid #33aafe;*/
   padding: 1rem;
+  position: relative;
 }
 
 
@@ -111,7 +112,16 @@ td a, td a:hover, td a:active {
   /*border: 1px solid #33aafe;*/
 }
 
-.red {
-  color: red;
+.date {
+  font-size: 0.75rem;
+  color: #aaa;
 }
+
+a.trash {
+  color: #333;
+  position: absolute;
+  right: 0.25rem;
+  
+}
+
 

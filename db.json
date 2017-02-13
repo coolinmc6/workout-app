@@ -41,13 +41,15 @@
       "minutes": "30",
       "miles": "6",
       "timestamp": "13 February 2017 9:1am"
+    },
+    {
+      "id": 42947744,
+      "minutes": "45",
+      "miles": "555",
+      "timestamp": "13 February 2017 10:24am"
     }
   ],
   "statuses": [
-    {
-      "status": "Shitty run today",
-      "id": 10265122
-    },
     {
       "status": "More stuff",
       "id": 22157011,
@@ -57,6 +59,26 @@
       "status": "more statuses",
       "id": 30685150,
       "date": "13 February 2017 10:3am"
+    },
+    {
+      "status": "Here is another update!",
+      "id": 70926112,
+      "date": "13 February 2017 10:20am"
+    },
+    {
+      "status": "This is absolutely amazing!!!",
+      "id": 40434009,
+      "date": "13 February 2017 10:20am"
+    },
+    {
+      "status": "Defender soccer forward striker upper 90 UEFA European Championship one-two ball referee African Cup of Nations number 10 goal brace midfielder hat trick. One-two brace red card goal hat trick World Cup yellow card pitch upper 90 number 10 soccer defender referee goalie four-four-two African Cup of Nations.",
+      "id": 45999992,
+      "date": "13 February 2017 10:22am"
+    },
+    {
+      "status": "Messi Tried To Scoop It Through, Gets The Deflection, Dances Around Two And Places It In The Corner!",
+      "id": 6778055,
+      "date": "13 February 2017 10:24am"
     }
   ]
 }

@@ -93,7 +93,7 @@ class App extends Component {
     return (
       <div className="container">
         <h1>Workout Tracker</h1>
-        <div className="col-sm-7 logger">
+        <div className="col-lg-7 logger">
           <h2>Log a Workout</h2>
           <WorkoutForm  miles={this.state.miles}
                         minutes={this.state.minutes}
@@ -121,7 +121,7 @@ class App extends Component {
           </table>
         </div>
 
-        <div className="col-sm-5 status">
+        <div className="col-lg-5 status">
           <h2>Workout Status</h2>
           
           <StatusForm />
